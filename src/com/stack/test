@@ -1,0 +1,197 @@
+package com.stack;
+
+import java.util.EmptyStackException;
+import java.util.Stack;
+
+public class MyStack extends Stack {
+
+    public Object get() {
+
+        int     len = size();
+
+        if (len == 0) return null;
+
+        return elementAt(len - 1);
+    }
+
+    public  Object remove() {
+
+        return pop();
+    }
+
+    public Object set(Object object) {
+
+        return push(object);
+    }
+
+    public MyStack  sort() {
+
+        int childStackCount = this.count() / 2;
+        MyStack childStack1 = new MyStack();
+        MyStack childStack2 = new MyStack();
+        MyStack childStack3 = new MyStack();
+
+        for (int i = 0; i < childStackCount; i++) {
+
+            int upperElement = (int) this.remove();
+            childStack1.set(upperElement);
+        }
+        System.out.println(childStack1);
+        while (this.size() != 0 && childStack1.size() != 0 || childStack3.size() != 0) {
+
+            while (this.size() != 0 || childStack1.size() != 0) {
+
+                firstStageOfSorting(childStack1, childStack2);
+                if (this.size() != 0 || childStack1.size() != 0) {
+                    secondStageOfSorting(childStack1, childStack3);
+                }
+
+            }
+
+            if (childStack3.size() != 0) {
+                for (int i = 0; i < childStack2.size(); i++) {
+
+                    int upperElement = (int) childStack2.remove();
+                    this.set(upperElement);
+                }
+                for (int i = 0; i < childStack3.size(); i++) {
+
+                    int upperElement = (int) childStack3.remove();
+                    childStack1.set(upperElement);
+                }
+            }
+        }
+
+        return childStack2;
+
+    }
+
+    public void firstStageOfSorting(MyStack childStack1, MyStack childStack2) {
+
+        int checker = 0;
+
+        while (checker == 0) {
+            if (this.get() == null) {
+                int upperElement2 = (int) childStack1.get();
+                childStack2.set(upperElement2);
+                childStack1.remove();
+                checker = 3;
+            }
+            if (childStack1.get() == null) {
+                int upperElement1 = (int) this.get();
+                childStack2.set(upperElement1);
+                this.remove();
+                checker = 3;
+            }
+
+            if (checker == 0) {
+                int upperElement1 = (int) this.get();
+                int upperElement2 = (int) childStack1.get();
+
+                if (upperElement1 < upperElement2) {
+                    childStack2.set(upperElement1);
+                    int lastBiggerElement = (int) this.remove();
+                    if ((int) this.get() < lastBiggerElement) checker = 1;
+                }
+                else {
+                    childStack2.set(upperElement2);
+                    int lastBiggerElement = (int) childStack1.remove();
+                    if ((int) childStack1.get() < lastBiggerElement) checker = 2;
+                }
+            }
+
+        }
+        if (checker == 1) {
+            int topElement;
+            do {
+                topElement = (int) childStack1.get();
+                childStack2.set(topElement);
+                childStack1.remove();
+            }
+            while (childStack1.get() != null && (int) childStack1.get() > topElement);
+        }
+
+        if (checker == 2) {
+            int topElement;
+            do {
+                topElement = (int) this.get();
+                childStack2.set(topElement);
+                this.remove();
+            }
+            while ((int) this.get() > topElement && this.get() != null);
+        }
+    }
+
+    public void secondStageOfSorting(MyStack childStack1, MyStack childStack3) {
+
+        int checker = 0;
+
+        while (checker == 0) {
+            if (this.get() == null) {
+                int upperElement2 = (int) childStack1.get();
+                childStack3.set(upperElement2);
+                childStack1.remove();
+                checker = 3;
+            }
+            if (childStack1.get() == null) {
+                int upperElement1 = (int) this.get();
+                childStack3.set(upperElement1);
+                this.remove();
+                checker = 3;
+            }
+
+            if (checker == 0) {
+                int upperElement1 = (int) this.get();
+                int upperElement2 = (int) childStack1.get();
+
+                if (upperElement1 < upperElement2) {
+                    childStack3.set(upperElement1);
+                    int lastBiggerElement = (int) this.remove();
+                    if ((int) this.get() < lastBiggerElement) checker = 1;
+                }
+                else {
+                    childStack3.set(upperElement2);
+                    int lastBiggerElement = (int) childStack1.remove();
+                    if ((int) childStack1.get() < lastBiggerElement) checker = 2;
+                }
+            }
+
+        }
+        if (checker == 1) {
+            int topElement;
+            do {
+                topElement = (int) childStack1.get();
+                childStack3.set(topElement);
+                childStack1.remove();
+            }
+            while ((int) childStack1.get() > topElement && childStack1.get() != null);
+        }
+
+        if (checker == 2) {
+            int topElement;
+            do {
+                topElement = (int) this.get();
+                childStack3.set(topElement);
+                this.remove();
+            }
+            while ((int) this.get() > topElement && this.get() != null);
+        }
+    }
+
+    /*public int count() {
+
+        int count = 0;
+        while (!this.empty()) {
+
+
+            this.remove();
+            count++;
+        }
+        return count;
+    }*/
+
+    public int count() {
+
+        return this.size();
+    }
+}
